@@ -40,3 +40,11 @@ next-env.d.ts
 /.sites-runtime/
 /outputs/
 /work/
+data_bat
+
+# python (uv)
+.venv/
+__pycache__/
+*.pyc
+.claude/skills/ide-index-mcp
+.claude/skills/jetbrains-debugger

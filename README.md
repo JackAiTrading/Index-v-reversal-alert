@@ -10,6 +10,32 @@
 - 30 分钟内没有严格事件：仍按上述端点规则绘制候选极值后的 `V反右` / `反V右`。
 - 所有匹配均不跨午休；严格事件确认沿用项目离线标签，右侧观察只是报警后的价格路径解释，不等同于严格事件成立。
 
+## 运行
+
+页面数据由 `scripts/build_live_data.py` 生成，Python 环境由 [uv](https://docs.astral.sh/uv/getting-started/) 管理：Python 版本见 `.python-version`，依赖锁定在 `uv.lock`，一律通过 `uv run` 执行，不需要手动激活虚拟环境。
+
+macOS / Linux 首次使用：
+
+```bash
+brew install libomp   # lightgbm 在 macOS 上的运行时依赖，官方轮子不自带
+uv sync               # 按 uv.lock 创建 .venv 并安装依赖
+npm install
+```
+
+重建页面数据，`--model-root` 指向模型工程（默认 `D:\V-Right`）：
+
+```bash
+./refresh_live_data.sh --model-root /path/to/V-Right
+```
+
+启动页面（地址 http://127.0.0.1:4174）：
+
+```bash
+npm run dev -- --host 127.0.0.1 --port 4174
+```
+
+Windows 仍然双击 `start_live.bat` 启动、双击 `refresh_live_data.bat` 重建数据，同样需要先安装 uv。
+
 ## 严格事件判定方法
 
 严格事件完全按收盘价序列离线定义，上午和下午分别计算，任何左右臂都不能跨越午休或交易日边界。V反与反V使用相同约束，仅方向相反。
@@ -83,7 +109,7 @@ V反右振幅 = (右端价格 - P) / P
 
 界面为了直观展示，使用拐点左右各 30 分钟内的高低点绘制线段。这个 30 分钟绘图规则不是严格事件定义：严格事件左右臂仍然只能是 3～20 分钟，并且必须同时满足振幅、路径效率、对称度和 NMS 条件。因此界面看起来像 V，并不代表它一定属于严格事件。
 
-双击 `start_live.bat` 启动。模型、行情或严格事件更新后，双击 `refresh_live_data.bat` 重建页面数据。
+启动页面与重建数据的步骤见开头「运行」一节。
 
 ### 8. 关于连续报警与分钟级极值预测的公开研究参考
 
