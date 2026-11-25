@@ -14,11 +14,11 @@
 
 页面数据由 `scripts/build_live_data.py` 生成，Python 环境由 [uv](https://docs.astral.sh/uv/getting-started/) 管理：Python 版本见 `.python-version`，依赖锁定在 `uv.lock`，一律通过 `uv run` 执行，不需要手动激活虚拟环境。
 
-macOS / Linux 首次使用：
+首次使用：
 
 ```bash
-brew install libomp   # lightgbm 在 macOS 上的运行时依赖，官方轮子不自带
-uv sync               # 按 uv.lock 创建 .venv 并安装依赖
+brew install libomp coreutils   # 仅 macOS：libomp 是 lightgbm 的运行时依赖（官方轮子不自带），coreutils 提供 GNU timeout
+uv sync                         # 按 uv.lock 创建 .venv 并安装依赖
 npm install
 ```
 
@@ -33,6 +33,15 @@ npm install
 ```bash
 npm run dev -- --host 127.0.0.1 --port 4174
 ```
+
+构建与测试（`npm test` 会先构建；构建脚本依赖 GNU `timeout`，macOS 由 `coreutils` 提供）：
+
+```bash
+npm run build
+npm test
+```
+
+本地安装依赖用 `npm install`；`npm run install:ci` 只供部署平台的 Linux 环境使用。
 
 Windows 仍然双击 `start_live.bat` 启动、双击 `refresh_live_data.bat` 重建数据，同样需要先安装 uv。
 
